@@ -15,8 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 class RegisterActivity : AppCompatActivity() {
     lateinit var binding: ActivityRegisterBinding
     lateinit var auth: FirebaseAuth
-    var database:FirebaseDatabase= FirebaseDatabase.getInstance()
-    var reference= database.reference.child("users")
+
 
 
 
@@ -41,39 +40,39 @@ class RegisterActivity : AppCompatActivity() {
 
 
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener {
-                    if(it.isSuccessful){
-                        var userId =auth.currentUser?.uid
-                        var userModel =userModel(
-                            userId.toString(),
-                            firstName,lastName,address,email,contact
-                        )
-                        reference.child(userId.toString()).setValue(userModel).addOnCompleteListener {
-
-                            if(it.isSuccessful){
-                                Toast.makeText(this@RegisterActivity,
-                                    "Registration Success",
-                                    Toast.LENGTH_LONG).show()
-
-                            } else{
-                                Toast.makeText(this@RegisterActivity,
-                                    it.exception?.message.toString(),
-                                    Toast.LENGTH_LONG).show()
-
-                            }
-                        }
-
-
-                        Toast.makeText(this@RegisterActivity,
-                            "Registration Success",
-                            Toast.LENGTH_LONG).show()
-                    }else{
-                        Toast.makeText(this@RegisterActivity,
-                            it.exception?.message.toString(),
-                            Toast.LENGTH_LONG).show()
-                    }
-                }
+//            auth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener {
+//                    if(it.isSuccessful){
+//                        var userId =auth.currentUser?.uid
+//                        var userModel =userModel(
+//                            userId.toString(),
+//                            firstName,lastName,address,email,contact
+//                        )
+//                        reference.child(userId.toString()).setValue(userModel).addOnCompleteListener {
+//
+//                            if(it.isSuccessful){
+//                                Toast.makeText(this@RegisterActivity,
+//                                    "Registration Success",
+//                                    Toast.LENGTH_LONG).show()
+//
+//                            } else{
+//                                Toast.makeText(this@RegisterActivity,
+//                                    it.exception?.message.toString(),
+//                                    Toast.LENGTH_LONG).show()
+//
+//                            }
+//                        }
+//
+//
+//                        Toast.makeText(this@RegisterActivity,
+//                            "Registration Success",
+//                            Toast.LENGTH_LONG).show()
+//                    }else{
+//                        Toast.makeText(this@RegisterActivity,
+//                            it.exception?.message.toString(),
+//                            Toast.LENGTH_LONG).show()
+//                    }
+//                }
 
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
