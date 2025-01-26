@@ -1,6 +1,5 @@
 package com.example.crud.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -8,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.crud.R
-import com.example.crud.databinding.ActivityLoginBinding
+import com.example.crud.databinding.ActivityForgotBinding
 import com.example.crud.repository.UserRepositoryImpl
 import com.example.crud.utils.LoadingUtils
 import com.example.crud.viewmodel.UserViewModel
 
-class LoginActivity : AppCompatActivity() {
-    lateinit var binding: ActivityLoginBinding
+class ForgotActivity : AppCompatActivity() {
+    lateinit var binding: ActivityForgotBinding
     lateinit var userViewModel: UserViewModel
     lateinit var loadingUtils: LoadingUtils
 
@@ -22,58 +21,40 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityForgotBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize repository, ViewModel, and LoadingUtils
         val repo = UserRepositoryImpl()
         userViewModel = UserViewModel(repo)
         loadingUtils = LoadingUtils(this)
 
+        // Handle Reset Password button click
+        binding.btnResetPassword.setOnClickListener {
+            val email = binding.forgotPasswordEmail.text.toString()
 
-        binding.btnSignupnavigate.setOnClickListener {
-            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-
-
-        binding.btnForget.setOnClickListener {
-            val intent = Intent(this@LoginActivity,ForgotActivity::class.java)
-            startActivity(intent)
-        }
-
-
-
-        binding.btnLogin.setOnClickListener {
-            val email = binding.editEmail.text.toString()
-            val password = binding.editPassword.text.toString()
-
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            // Validate input
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-
+            // Show loading indicator
             loadingUtils.show()
 
-
-            userViewModel.login(email, password) { success, message ->
+            // Call forgetPassword method
+            userViewModel.forgetPassword(email) { success, message ->
                 loadingUtils.dismiss()
                 if (success) {
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    binding.btnLogin.setOnClickListener {
-                        val intent = Intent(this@LoginActivity, NavigationActivity::class.java)
-                        startActivity(intent)
-                    }
-
-
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    finish() // Close the activity after success
                 } else {
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
             }
         }
 
-
+        // Handle edge-to-edge system bar insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
