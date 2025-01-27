@@ -50,6 +50,7 @@ class ProductAdapter(var context:Context,
 
         holder.btnEdit.setOnClickListener {
             val intent = Intent(context,UpdateProductActivity::class.java)
+            intent.putExtra("Products",data[position].productId)
             context.startActivity(intent)
         }
 
@@ -60,6 +61,12 @@ class ProductAdapter(var context:Context,
         data.clear()
         data.addAll(products)
         notifyDataSetChanged()
+    }
+
+    fun getProductId(position: Int):String{
+        return data[position].productId
+
+
     }
 
 
